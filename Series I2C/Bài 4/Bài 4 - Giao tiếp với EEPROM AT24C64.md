@@ -1,26 +1,27 @@
-# Bài 3 - Giao tiếp với module thời gian thực DS1307
+# Bài 4: Giao tiếp với EEPROM AT24C64
 
-**DS1307** là IC đồng hồ thời gian thực dùng để cung cấp thông tin về thời gian hiện tại (giờ phút giây, ngày tháng) và có khả năng duy trì dữ liệu này ngay cả khi mất nguồn bằng cách sử dụng pin dự phòng. Bài viết này sẽ hướng dẫn sử dụng STM32F103 để giao tiếp với IC DS1307.
+**AT24C64** là một bộ nhớ **EEPROM** (Electrically Erasable Programmable Read-Only Memory) có khả năng lưu trữ dữ liệu, vẫn được giữ lại ngay cả khi mất nguồn điện. AT24C64 thuộc dòng bộ nhớ EEPROM có giao tiếp I2C.
+
+Bài viết này sẽ hướng dẫn sử dụng STM32F103 để giao tiếp với AT24C64.
 
 ## Mục lục
 
-- [Bài 3 - Giao tiếp với module thời gian thực DS1307](#bài-3---giao-tiếp-với-module-thời-gian-thực-ds1307)
+- [Bài 4: Giao tiếp với EEPROM AT24C64](#bài-4-giao-tiếp-với-eeprom-at24c64)
 	- [Mục lục](#mục-lục)
 	- [Kiến thức cần có](#kiến-thức-cần-có)
 	- [Mục tiêu bài học](#mục-tiêu-bài-học)
-	- [DS1307](#ds1307)
+	- [AT24C64](#at24c64)
 	- [Sơ đồ mạch điện](#sơ-đồ-mạch-điện)
-	- [Project: Giao tiếp với DS1307 và in thời gian qua Serial](#project-giao-tiếp-với-ds1307-và-in-thời-gian-qua-serial)
+	- [Project: Giao tiếp với EEPROM AT24C64 và in thời gian qua Serial](#project-giao-tiếp-với-eeprom-at24c64-và-in-thời-gian-qua-serial)
 		- [Tạo project, cấu hình I2C và UART](#tạo-project-cấu-hình-i2c-và-uart)
 		- [Thêm thư viện](#thêm-thư-viện)
 		- [Một số hàm sử dụng](#một-số-hàm-sử-dụng)
-		- [Code](#code)
-		- [Kết quả](#kết-quả)
+	- [Code](#code)
+	- [Kết quả](#kết-quả)
 	- [Câu hỏi và bài tập](#câu-hỏi-và-bài-tập)
 		- [Câu hỏi](#câu-hỏi)
 		- [Bài tập](#bài-tập)
 	- [Tài liệu tham khảo](#tài-liệu-tham-khảo)
-
 
 ## Kiến thức cần có
 
@@ -29,35 +30,34 @@
 
 ## Mục tiêu bài học
 
-- Hiểu cách đọc và thay đổi (ghi) thời gian lên IC DS1307.
+- Hiểu được cách đọc, ghi lên EEPROM AT24C64.
 
-## DS1307
+## AT24C64
 
-**DS1307** là IC đồng hồ thời gian thực dùng để cung cấp thông tin về thời gian hiện tại (giờ phút giây, ngày tháng) và có khả năng duy trì dữ liệu này ngay cả khi mất nguồn bằng cách sử dụng pin dự phòng.
+AT24C64 là IC EEPROM, có dung lượng lưu trữ 64Kbit (8KB). IC sử dụng giao tiếp I2C, với tốc độ clock lên tới 1MHz. Điện áp hoạt động từ 1.7V đến 5.5V, khiến nó phù hợp với cả hệ thống 3.3V và 5V.
 
-![ds1307_module](https://cdn-shop.adafruit.com/970x728/3296-03.jpg)
+Trên thị trường có bán các loại module chứa AT24C64, và thường đi kèm với IC thời gian thực DS1307.
 
-IC này sử dụng giao thức truyền thông **I2C** để đọc/ghi dữ liệu. Trên thị trường có nhiều loại module sử dụng DS1307, nhìn chung chúng đều có các chân:
+![alt text](<images/Screenshot 2024-09-13 at 22.47.11.png>)
 
-- 5V hoặc VCC hoặc VDD: chân cấp nguồn cho mạch. Nối với nguồn 5V.
-- GND hoặc VSS: chân nối đất (0V).
-- SDA: chân SDA của giao thức I2C.
-- SCL: chân SCL của giao thức I2C.
-- SQW hoặc SQWE: chân này là tùy chọn, có thể lập trình để tạo ra xung tần số 1Hz, 4.096kHz, 8.192kHz, 32.768kHz.
+Các chân của AT24C64:
+- VCC: Chân cấp nguồn, từ 1.7V - 5.5V
+- GND: Chân nối 0V
+- SDA, SCL: Các chân của giao tiếp I2C
+- WP: Write Protection - chân bảo vệ. Khi chân này ở mức cao, IC sẽ không cho phép ghi lên nửa sau của IC. Trên module, chân này không nối ra ngoài, mặc định nối 0V.
+- A0, A1, A2: Các chân này sẽ thay đổi địa chỉ I2C của chip. Trên module, các chân này không nối ra ngoài, mặc định nối 0V (địa chỉ I2C là 0x50)
 
-> Lưu ý: DS1307 được thiết kế để hoạt động với 5V. Cấp nguồn thấp hơn, IC có thể không hoạt động.
+## Sơ đồ mạch điện
 
-##  Sơ đồ mạch điện
+Cấp nguồn cho IC AT24C64 với 3.3V hoặc 5V. Nối các chân SCL (PB6) và SDA (PB7) của STM32F103 tương ứng với các chân SDA, SCL của IC.
 
-Sơ đồ nối dây giữa STM32F103 và module DS1307:
+![alt text](<images/Screenshot 2024-09-13 at 23.03.30.png>)
 
-![schematic](./images/schematic.png)
+> Lưu ý: tương tự DS1307, khi dùng module sẽ có sẵn R1 và R2 nên không cần gắn các điện trở này.
 
-> Lưu ý: điện trở R1, R2 là điện trở kéo lên trong giao thức I2C. Phần lớn các module đều có gắn điện trở này, do đó có thể bỏ qua.
+## Project: Giao tiếp với EEPROM AT24C64 và in thời gian qua Serial
 
-## Project: Giao tiếp với DS1307 và in thời gian qua Serial
-
-Dùng STM32F103 để đọc thời gian và in thời gian qua UART để hiện thị trên máy tính.
+Dùng STM32F103 để ghi dòng chữ "hello" vào EEPROM, sau đó đọc lại và gửi qua UART để hiện thị trên máy tính.
 
 ### Tạo project, cấu hình I2C và UART
 
@@ -67,50 +67,61 @@ Tạo project mới trên STM32CubeIDE. Trong giao diện của STM32CubeMX, b�
 - PA9 - USART1_TX
 - PA10 - USART1_RX
 
-![alt text](./images/config.png)
+![alt text](<images/Screenshot 2024-09-13 at 23.10.41.png>)
 
 Sau đó lưu lại và để phần mềm tự động tạo code.
 
 ### Thêm thư viện
 
-Thư viện giao tiếp với DS1307 mình đã viết sẵn vào các file *ds1307.h* và *ds1307.c*. Thêm thư viện vào project như sau:
+Thư viện giao tiếp với AT24C64 mình đã viết sẵn vào các file *at24c64.h* và *at24c64.c*. Thêm thư viện vào project như sau:
 
-- *ds1307.h* thêm vào *Core/Inc*.
-- *ds1307.c* thêm vào *Core/Src*.
+- *at24c64.h* thêm vào *Core/Inc*.
+- *at24c64.c* thêm vào *Core/Src*.
 
 ### Một số hàm sử dụng
 
-Các hàm và cấu trúc sử dụng trong thư viện DS1307:
+Các hàm và cấu trúc sử dụng:
 
 ```c++
-/* Cấu trúc dùng để lưu thời gian */
+/* Cấu trúc chứa thông tin địa chỉ và I2C handle cho mỗi EEPROM */
 typedef struct
 {
-	uint8_t seconds;
-	uint8_t minutes;
-	uint8_t hours;
-	uint8_t day;
-	uint8_t date;
-	uint8_t month;
-	uint8_t year;
-	I2C_HandleTypeDef *i2cHandle;
-} DS1307;
+	I2C_HandleTypeDef *hi2c;
+	uint16_t deviceAddress;
+} AT24C64;
 
-/* Khởi tạo thư viện */
-void DS1307_Init(DS1307 *dev, I2C_HandleTypeDef *hi2c);
+/* 
+* Khởi tạo EEPROM.
+* eeprom: con trỏ tới cấu trúc của EEPROM
+* hi2c: con trỏ tới cấu trúc điều khiển I2C
+* deviceAddress: địa chỉ của EEPROM
+*/
+void AT24C64_Init(AT24C64 *eeprom, I2C_HandleTypeDef *hi2c, uint8_t deviceAddress);
 
-/* Đọc thời gian */
-void DS1307_ReadTime(DS1307 *dev);
+/*
+* Ghi dữ liệu vào địa chỉ bất kỳ trong EEPROM
+* eeprom: con trỏ tới cấu trúc của EEPROM
+* MemAddress: địa chỉ muốn ghi vào
+* pData: con trỏ chỉ tới dữ liệu muốn ghi
+* Size: số byte dữ liệu muốn ghi
+*/
+void AT24C64_Write(AT24C64 *eeprom, uint16_t MemAddress, uint8_t *pData, uint16_t Size);
 
-/* Đặt thời gian */
-void DS1307_SetTime(DS1307 *dev);
+/*
+* Đọc dữ liệu tại địa chỉ bất kỳ trong EEPROM
+* eeprom: con trỏ tới cấu trúc của EEPROM
+* MemAddress: địa chỉ muốn đọc ra
+* pData: con trỏ chỉ tới nơi sẽ nhận dữ liệu
+* Size: số byte dữ liệu muốn đọc
+*/
+void AT24C64_Read(AT24C64 *eeprom, uint16_t MemAddress, uint8_t *pData, uint16_t Size);
 
-/* Bật/Tắt chức năng tạo xung ở chân SQW */
-void DS1307_SqwEnable(DS1307 *dev, uint8_t enable);
 ```
 
-### Code
-main.c:
+## Code
+
+`main.c`:
+
 ```c++
 /* USER CODE BEGIN Header */
 /**
@@ -136,8 +147,7 @@ main.c:
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* Thêm thư viện */
-#include "ds1307.h"
-#include <stdio.h>
+#include "at24c64.h"
 
 /* USER CODE END Includes */
 
@@ -162,8 +172,8 @@ I2C_HandleTypeDef hi2c1;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-/* Khai báo biến lưu thời gian */
-DS1307 ds1307;
+/* Khai báo một struct điều khiển AT24C64 */
+AT24C64 eeprom;
 
 /* USER CODE END PV */
 
@@ -211,42 +221,33 @@ int main(void) {
 	MX_I2C1_Init();
 	MX_USART1_UART_Init();
 	/* USER CODE BEGIN 2 */
-
-	/* Khởi tạo thư viện DS1307 */
-	DS1307_Init(&ds1307, &hi2c1);
-
-	/* Lưu thời gian muốn thay đổi vào biến */
-	ds1307.hours = 15;
-	ds1307.minutes = 30;
-	ds1307.seconds = 25;
-	ds1307.date = 8;
-	ds1307.month = 8;
-	ds1307.year = 24;
-
-	/* Sửa thời gian và lưu vào DS1307 */
-	DS1307_SetTime(&ds1307);
+	/* Khởi tạo eeprom */
+	AT24C64_Init(&eeprom, &hi2c1, 0x50);
 
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	char msg[21];
-
+	/* msg1 sẽ được ghi vào EEPROM. msg2 là nơi chứa khi đọc dữ liệu về */
+	char msg1[] = "hello";
+	char msg2[10];
 	while (1) {
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
-		/* Đọc thời gian */
-		DS1307_ReadTime(&ds1307);
+		/* Ghi msg1 vào địa chỉ 0x10 của EEPROM, số lượng byte là 5 */
+		AT24C64_Write(&eeprom, 0x10, (uint8_t*) msg1, 5);
 
-		sprintf(msg, "%02d:%02d:%02d %02d/%02d/20%02d\n", ds1307.hours,
-				ds1307.minutes, ds1307.seconds, ds1307.date, ds1307.month,
-				ds1307.year);
+		/* Đọc lại 5 ký tự ở 0x10 và lưu vào msg2 */
+		AT24C64_Read(&eeprom, 0x10, (uint8_t*) msg2, 5);
 
-		/* In lên Serial */
-		HAL_UART_Transmit(&huart1, (uint8_t *)msg, 20, 100);
+		/* In lên  Serial*/
+		HAL_UART_Transmit(&huart1, (uint8_t*) msg2, 5, 100);
 
-		HAL_Delay(500);
+		/* Xóa hết dữ liệu ở msg2 */
+		memset(msg2, 0, sizeof(msg2));
+
+		HAL_Delay(1000);
 	}
 	/* USER CODE END 3 */
 }
@@ -397,108 +398,99 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
 ```
 
 Giải thích:
 
 Thêm thư viện:
+
 ```c++
 ...
+/* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* Thêm thư viện */
-#include "ds1307.h"
-#include <stdio.h>
+#include "at24c64.h"
 
 /* USER CODE END Includes */
 ...
 ```
 
-Khai báo biến `ds1307`:
+Khai báo biến `eeprom`:
+
 ```c++
 ...
 /* USER CODE BEGIN PV */
-/* Khai báo biến lưu thời gian */
-DS1307 ds1307;
+/* Khai báo một struct điều khiển AT24C64 */
+AT24C64 eeprom;
 
 /* USER CODE END PV */
 ...
 ```
 
-Trong hàm `main()`:
+Khởi tạo EEPROM trong `main()`:
 
 ```c++
 ...
-/* USER CODE BEGIN 2 */
+	/* USER CODE BEGIN 2 */
+	/* Khởi tạo eeprom */
+	AT24C64_Init(&eeprom, &hi2c1, 0x50);
 
-/* Khởi tạo thư viện DS1307 */
-DS1307_Init(&ds1307, &hi2c1);
-
-/* Lưu thời gian muốn thay đổi vào biến */
-ds1307.hours = 15;
-ds1307.minutes = 30;
-ds1307.seconds = 25;
-ds1307.date = 8;
-ds1307.month = 8;
-ds1307.year = 24;
-
-/* Sửa thời gian và lưu vào DS1307 */
-DS1307_SetTime(&ds1307);
-
-/* USER CODE END 2 */
+	/* USER CODE END 2 */
 ...
 ```
 
-Trong khối `while()`:
+Khối `while()`:
+
 ```c++
 ...
 /* Infinite loop */
-/* USER CODE BEGIN WHILE */
-char msg[21]; //buffer chứa chuỗi ký tự gửi lên Serial
+	/* USER CODE BEGIN WHILE */
+	/* msg1 sẽ được ghi vào EEPROM. msg2 là nơi chứa khi đọc dữ liệu về */
+	char msg1[] = "hello";
+	char msg2[10];
+	while (1) {
+		/* USER CODE END WHILE */
 
-while (1) {
-	/* USER CODE END WHILE */
+		/* USER CODE BEGIN 3 */
+		/* Ghi msg1 vào địa chỉ 0x10 của EEPROM, số lượng byte là 5 */
+		AT24C64_Write(&eeprom, 0x10, (uint8_t*) msg1, 5);
 
-	/* USER CODE BEGIN 3 */
-	/* Đọc thời gian */
-	DS1307_ReadTime(&ds1307);
+		/* Đọc lại 5 ký tự ở 0x10 và lưu vào msg2 */
+		AT24C64_Read(&eeprom, 0x10, (uint8_t*) msg2, 5);
 
-	/* Ghi thời gian, ngày tháng vào msg  */
-	sprintf(msg, "%02d:%02d:%02d %02d/%02d/20%02d\n", ds1307.hours,
-			ds1307.minutes, ds1307.seconds, ds1307.date, ds1307.month,
-			ds1307.year);
+		/* In lên  Serial*/
+		HAL_UART_Transmit(&huart1, (uint8_t*) msg2, 5, 100);
 
-	/* In msg lên Serial */
-	HAL_UART_Transmit(&huart1, (uint8_t *)msg, 20, 100);
+		/* Xóa hết dữ liệu ở msg2 */
+		memset(msg2, 0, sizeof(msg2));
 
-	HAL_Delay(500);
-}
-/* USER CODE END 3 */
+		HAL_Delay(1000);
+	}
+	/* USER CODE END 3 */
 ...
 ```
 
-### Kết quả
+## Kết quả
 
 Mở ứng dụng giao tiếp với cổng Serial nối với STM32F103, kết nối với baudrate 115200.
 
-![alt text](./images/result.png)
+![alt text](<images/Screenshot 2024-09-13 at 23.53.07.png>)
 
 ## Câu hỏi và bài tập
 
 ### Câu hỏi
 
-1. IC DS1307 được dùng để làm gì? Giao thức dùng để giao tiếp với DS1307
-2. Vì sao có thể bỏ điện trở kéo lên khi nối dây tới module DS1307?
-3. Chân SQW của DS1307 để làm gì?
+1. AT24C64 là bộ nhớ có dung lượng 8KByte. Địa chỉ tối đa có thể truy cập ?
 
 ### Bài tập
 
-1. In thêm ngày trong tuần (thứ Hai, thứ Ba,...) lên Serial
-> Gợi ý: sử dụng `ds1307.day`, có giá trị từ 1-7. Gán ngày trong tuần tương ứng với số.
-2. (Khó) Dùng 2 macro `__TIME__` và `__DATE__` để **lấy thời gian tại thời điểm biên dịch**, xử lý và lưu vào DS1307.
-3. (Khó) Đọc datasheet và tự viết một thư viện giao tiếp với DS1307.
+1. Tạo một biến. Mỗi lần lưu vào EEPROM thì tăng biến thêm 1 đơn vị. Sau đó đọc biến đó từ EEPROM, in lên Serial, rồi lặp lại.
+2. Tạo một cấu trúc gồm 2 số nguyên kiểu `int` (`uint32_t`): nhiệt độ và độ ẩm. Lưu vào EEPROM rồi đọc ra. Gợi ý: ép kiểu con trỏ tới cấu trúc thành con trỏ `uint8_t *` mỗi khi đọc ghi. Dùng hàm `sizeof()` để trả về kích thước (số byte) của cấu trúc.
+3. (Khó) Đọc cảm biến nhiệt độ, độ ẩm DHT11, lưu vào EEPROM mỗi 10s. Đọc đủ 3 lần thì in hết dữ liệu đã lưu lên Serial.
 
 ## Tài liệu tham khảo
 
 [1] STMicroelectronics, "Medium-density performance line Arm®-based 32-bit MCU with 64 or 128 KB Flash, USB, CAN, 7 timers, 2 ADCs, 9 com. interfaces", STM32F103Cx8/B Datasheet, Sep. 2023.
 
-[2] Maxim Integrated, "64 x 8, Serial, I2C Real-Time Clock", DS1307 Datasheet, 03/2015.
+[2] Microchip, "I2C-Compatible (Two-Wire) Serial EEPROM 64-Kbit (8,192 x 8)", AT24C64D Datasheet, Dec. 2020
