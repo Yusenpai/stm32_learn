@@ -73,10 +73,10 @@ Sau đó lưu lại và để phần mềm tự động tạo code.
 
 ### Thêm thư viện
 
-Thư viện giao tiếp với AT24C64 mình đã viết sẵn vào các file *at24c64.h* và *at24c64.c*. Thêm thư viện vào project như sau:
+Thư viện giao tiếp với AT24C64 mình đã viết sẵn vào các file `at24c64.h` và `at24c64.c`. Thêm thư viện vào project như sau:
 
-- *at24c64.h* thêm vào *Core/Inc*.
-- *at24c64.c* thêm vào *Core/Src*.
+- `at24c64.h` thêm vào `Core/Inc`.
+- `at24c64.c` thêm vào `Core/Src`.
 
 ### Một số hàm sử dụng
 
