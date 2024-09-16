@@ -24,6 +24,7 @@ Màn hình này sử dụng IC SSD1306 để điều khiển. Bài viết này s
 
 ## Kiến thức cần có
 
+- Series cơ bản.
 - Bài 1: Giới thiệu về giao thức I2C.
 
 ## Mục tiêu bài học
