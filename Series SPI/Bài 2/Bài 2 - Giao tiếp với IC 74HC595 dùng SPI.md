@@ -76,6 +76,8 @@ Mô tả các chân của 74HC595:
 
 ![alt text](<images/Screenshot 2024-09-16 at 13.49.49.png>)
 
+Tham khảo [74HC595 datasheet](74HC595.PDF).
+
 ## Sơ đồ mạch điện
 
 - PB15(MOSI) <---> DS.

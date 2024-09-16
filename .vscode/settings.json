@@ -1,6 +1,7 @@
 {
 	"C_Cpp.errorSquiggles": "disabled",
 	"files.associations": {
-		"ds1307.h": "c"
+		"ds1307.h": "c",
+		"max7219.h": "c"
 	}
 }
