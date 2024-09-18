@@ -71,4 +71,8 @@ void MAX7219_ChangeIntensity(MAX7219 *dev, uint8_t intensity);
 void MAX7219_Decode(MAX7219 *dev, uint8_t onOff);
 void MAX7219_Clear(MAX7219 *dev);
 
+void MAX7219_InitMatrix(MAX7219 *dev, SPI_HandleTypeDef *hspi, GPIO_TypeDef *csPinPort, uint16_t csPin);
+void MAX7219_PrintMatrix(MAX7219 *dev, uint8_t *buffer);
+void MAX7219_PrintMatrix32(MAX7219 *dev, uint32_t *buffer);
+
 #endif // __MAX7219_H__

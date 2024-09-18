@@ -9,6 +9,24 @@ static void MAX7219_SendData(MAX7219 *dev, uint8_t reg, uint8_t data)
 	HAL_GPIO_WritePin(dev->csPinPort, dev->csPin, GPIO_PIN_SET);   // Deselect the MAX7219
 }
 
+static void MAX7219_SendData32(MAX7219 *dev, uint8_t reg, uint32_t data)
+{
+	HAL_GPIO_WritePin(dev->csPinPort, dev->csPin, GPIO_PIN_RESET);
+	HAL_SPI_Transmit(dev->hspi, &reg, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(dev->hspi, (uint8_t *)&data + 3, 1, HAL_MAX_DELAY);
+
+	HAL_SPI_Transmit(dev->hspi, &reg, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(dev->hspi, (uint8_t *)&data + 2, 1, HAL_MAX_DELAY);
+
+	HAL_SPI_Transmit(dev->hspi, &reg, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(dev->hspi, (uint8_t *)&data + 1, 1, HAL_MAX_DELAY);
+
+	HAL_SPI_Transmit(dev->hspi, &reg, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(dev->hspi, (uint8_t *)&data, 1, HAL_MAX_DELAY);
+
+	HAL_GPIO_WritePin(dev->csPinPort, dev->csPin, GPIO_PIN_SET);
+}
+
 // Initialize the MAX7219 device
 void MAX7219_Init(MAX7219 *dev, SPI_HandleTypeDef *hspi, GPIO_TypeDef *csPinPort, uint16_t csPin)
 {
@@ -178,4 +196,47 @@ void MAX7219_Clear(MAX7219 *dev)
 	MAX7219_PrintDigit(dev, DIGIT_3, BLANK);
 	MAX7219_PrintDigit(dev, DIGIT_2, BLANK);
 	MAX7219_PrintDigit(dev, DIGIT_1, BLANK);
+}
+
+void MAX7219_InitMatrix(MAX7219 *dev, SPI_HandleTypeDef *hspi, GPIO_TypeDef *csPinPort, uint16_t csPin)
+{
+	// Assign the SPI handle and chip select pin to the device structure
+	dev->hspi = hspi;
+	dev->csPinPort = csPinPort;
+	dev->csPin = csPin;
+
+	// Set the CS pin to high (inactive state)
+	HAL_GPIO_WritePin(dev->csPinPort, dev->csPin, GPIO_PIN_SET);
+
+	// Disable decode mode (used for matrix mode)
+	MAX7219_Decode(dev, 0);
+
+	// Set scan limit to all 8 digits (columns) active
+	MAX7219_SendData(dev, REG_SCAN_LIMIT, 0x07);
+
+	// Exit shutdown mode (turn on display)
+	MAX7219_Turn(dev, 1);
+
+	// Clear the display
+	for (int i = 1; i <= 8; i++)
+	{
+		MAX7219_SendData(dev, i, 0x00); // Clear each row (digit)
+	}
+}
+
+void MAX7219_PrintMatrix(MAX7219 *dev, uint8_t *buffer)
+{
+	// Send the 8 bytes from the buffer to the MAX7219, each byte corresponds to one row
+	for (int i = 0; i < 8; i++)
+	{
+		MAX7219_SendData(dev, DIGIT_1 + i, buffer[i]);
+	}
+}
+
+void MAX7219_PrintMatrix32(MAX7219 *dev, uint32_t *buffer)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		MAX7219_SendData32(dev, DIGIT_1 + i, buffer[i]);
+	}
 }

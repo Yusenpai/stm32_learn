@@ -19,6 +19,7 @@ Bài viết này hướng dẫn cách giao tiếp với **MAX7219** dùng SPI c�
 	- [Câu hỏi và bài tập](#câu-hỏi-và-bài-tập)
 		- [Câu hỏi](#câu-hỏi)
 		- [Bài tập](#bài-tập)
+	- [Tài liệu tham khảo](#tài-liệu-tham-khảo)
 
 ## Kiến thức cần có
 
@@ -460,3 +461,9 @@ while (1)
 
 1. In số 0 chạy từ trái sang phải (từ chữ số thứ 8 về chữ số thứ 1) rồi lặp lại.
 2. (Khó) In số thập phân lên LED 7 đoạn. Gợi ý: Tách thành phần nguyên và phần thập phân, in từng phần lên màn hình. Sử dụng hàm `MAX7219_PrintDot(&max7219, position, 1)` để in dấu chấm tại `position`;
+
+## Tài liệu tham khảo
+
+[1] STMicroelectronics, "Medium-density performance line Arm®-based 32-bit MCU with 64 or 128 KB Flash, USB, CAN, 7 timers, 2 ADCs, 9 com. interfaces", STM32F103Cx8/B Datasheet, Sep. 2023.
+
+[2] Maxim Integrated, "Serially Interfaced, 8-Digit LED Display Drivers", MAX7219-MAX7221 Datasheet, Rev August. 2021
