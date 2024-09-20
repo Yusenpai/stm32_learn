@@ -163,6 +163,8 @@ Có ba giao diện:
 
 ![alt text](images/workspace.png)
 
+> Lưu ý: trước khi tạo project, các bạn hãy đăng nhập ở [myST] > [Login] với tài khoản ST đã tạo.
+
 #### Workspace và project
 
 Workspace (môi trường làm việc) chứa các thư mục của project và thông tin về chúng. Workspace đơn giản là một thư mục trên ổ đĩa, có thể di chuyển và đặt tùy ý. Khi STM32CubeIDE khởi động, nó sẽ hỏi workspace nào sẽ sử dụng.

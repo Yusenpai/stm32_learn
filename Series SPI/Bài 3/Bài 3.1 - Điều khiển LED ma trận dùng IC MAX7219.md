@@ -1,5 +1,23 @@
 # Bài 3.1: Điều khiển LED ma trận dùng IC MAX7219
 
+## Mục lục
+
+- [Bài 3.1: Điều khiển LED ma trận dùng IC MAX7219](#bài-31-điều-khiển-led-ma-trận-dùng-ic-max7219)
+	- [Mục lục](#mục-lục)
+	- [LED ma trận 8x8](#led-ma-trận-8x8)
+	- [Multiplexing](#multiplexing)
+	- [Charlieplexing](#charlieplexing)
+	- [Project: Hiển thị hình lên LED ma trận 8x8 dùng IC MAX7219](#project-hiển-thị-hình-lên-led-ma-trận-8x8-dùng-ic-max7219)
+		- [Tạo project mới, cấu hình SPI và GPIO](#tạo-project-mới-cấu-hình-spi-và-gpio)
+		- [Thêm thư viện](#thêm-thư-viện)
+		- [Các hàm sử dụng](#các-hàm-sử-dụng)
+	- [Code](#code)
+		- [Kết quả](#kết-quả)
+	- [Câu hỏi và bài tập](#câu-hỏi-và-bài-tập)
+	- [Bài tập](#bài-tập)
+	- [Tài liệu tham khảo](#tài-liệu-tham-khảo)
+
+
 ## LED ma trận 8x8
 
 **LED ma trận 8x8** là một màn hình LED được sắp xếp thành một lưới gồm 8 hàng và 8 cột, tổng cộng có 64 đèn LED nhỏ. Những LED này có thể được điều khiển để hiển thị các hình ảnh, ký tự, hoặc hiệu ứng khác nhau bằng cách bật và tắt các điểm ảnh (pixel) trong ma trận
