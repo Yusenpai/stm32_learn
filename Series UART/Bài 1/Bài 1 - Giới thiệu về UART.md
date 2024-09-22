@@ -11,9 +11,13 @@ Bài ngày hôm nay sẽ tìm hiểu sâu về giao thức UART, cách sử dụ
 	- [UART - Universal Asynchronous Receiver/Transmitter](#uart---universal-asynchronous-receivertransmitter)
 	- [Khung truyền dữ liệu của UART](#khung-truyền-dữ-liệu-của-uart)
 	- [USART](#usart)
-	- [USART trên vi điều khiển STM32F103](#usart-trên-vi-điều-khiển-stm32f103)
-	- [Cấu hình USART trên STM32 với STM32CubeMX](#cấu-hình-usart-trên-stm32-với-stm32cubemx)
+		- [USART trên vi điều khiển STM32F103](#usart-trên-vi-điều-khiển-stm32f103)
+		- [Cấu hình USART trên STM32 với STM32CubeMX](#cấu-hình-usart-trên-stm32-với-stm32cubemx)
+		- [Kích hoạt ngắt cho UART](#kích-hoạt-ngắt-cho-uart)
 	- [Sử dụng thư viện HAL\_UART](#sử-dụng-thư-viện-hal_uart)
+	- [Câu hỏi và bài tập](#câu-hỏi-và-bài-tập)
+		- [Câu hỏi](#câu-hỏi)
+	- [Tài liệu tham khảo](#tài-liệu-tham-khảo)
 
 ## UART - Universal Asynchronous Receiver/Transmitter
 
@@ -49,7 +53,7 @@ Một khung truyền của UART gồm:
 
 USART (Universal ***Synchronous*** Asynchronous Receiver/Transmitter) là giao thức mở rộng của UART, có thêm tín năng truyền dữ liệu đồng bộ (có thêm một chân clock). Giao thức này tương thích với UART, ngoài ra còn hỗ trợ một số giao tiếp đồng bộ khác.
 
-## USART trên vi điều khiển STM32F103
+### USART trên vi điều khiển STM32F103
 
 Trên vi điều khiển STM32F103 có ba ngoại vi USART hoạt động độc lập nhau
 
@@ -62,7 +66,7 @@ Mỗi ngoại vi có thể được lập trình để giao tiếp ở các ch�
 - IrDA: chế độ giao tiếp qua hồng ngoại
 - SmartCard: chế độ giao tiếp với smartcard (trong thẻ ATM, thẻ SIM,...)
 
-## Cấu hình USART trên STM32 với STM32CubeMX
+### Cấu hình USART trên STM32 với STM32CubeMX
 
 Sau khi tạo project mới trong STM32CubeIDE, mở tập tin .ioc sẽ tự động chuyển sang giao diện Device Configuration (STM32CubeMX).
 
@@ -83,11 +87,57 @@ Bảng *Configuration* hiện ra. Ở đây có thể tìm thấy các thông s�
 
 > Lưu ý: Nên điều chỉnh các thông số trong Basic Paremeters cho phù hợp. Thông số trong Advanced Parameters có thể để mặc định.
 
+
 Ngoài ra các chân truyền UART được sử dụng là `PA9` (TX) và `PA10` (RX). Có thể nhấn Ctrl + Click + giữ chuột vào chân `PA9` để xem các chân thay thế (chân `PB6`). Tương tự có thể đổi chân RX sang `PB7`.
 
 ![alt text](<images/Screenshot 2024-09-20 at 16.24.37.png>)
 
 > Lưu ý: Để đổi chân TX sang PB6, click chuột vào chân PB6 rồi chọn USART1_TX
 
+### Kích hoạt ngắt cho UART
+
+Khi USART truyền xong dữ liệu hoặc nhận xong dữ liệu, khi thanh ghi truyền đi hay nhận về đang trống,... USART sẽ gửi một ngắt đến CPU để phục vụ ngắt đó.
+
+Để bật các ngắt này trong STM32CubeMX, trong bảng 
+*Configuration*, chọn tab *NVIC Settings*, tích vào ô Enabled ở dòng *USART1 global interrupt*. Sau đó có thể sử dụng các ngắt do thư viện HAL cung cấp.
+
+![](<images/Screenshot 2024-09-22 at 14.05.59.png>)
+
 ## Sử dụng thư viện HAL_UART
 
+Thư viện HAL_UART của STM32 cung cấp các cấu trúc và hàm cấu hình và điều khiển hoạt động của USART. Một số cấu trúc và hàm cơ bản:
+
+```c++
+/* Cấu trúc điều khiển của UART. Chứa các thông số của UART, buffer lưu trữ dữ liệu,..*/
+typedef struct UART_HandleTypeDef;
+
+/* Hàm truyền dữ liệu, chế độ blocking */
+HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+
+/* Hàm nhận dữ liệu, chế độ blocking */
+HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout)
+
+/* Hàm callback. Được gọi mỗi khi USART truyền xong */
+HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+
+/* Hàm callback. Được gọi mỗi khi USART nhận xong */
+HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+
+```
+
+Ngoài ra còn các hàm ở chế độ ngắt và chế độ DMA. Tham khảo thêm ở [UM1850](um1850-description-of-stm32f1-hal-and-lowlayer-drivers-stmicroelectronics.pdf)
+
+## Câu hỏi và bài tập
+
+### Câu hỏi
+
+1. Giao thức UART khác gì so với các giao thức I2C, SPI ?
+2. USART là gì ?
+3. Các thông số của ngoại vi USART trên STM32F103C8? Ý nghĩa của chúng
+4. Kể tên các hàm cơ bản (truyền / nhận)
+
+## Tài liệu tham khảo
+
+[1] STMicroelectronics, "Medium-density performance line Arm®-based 32-bit MCU with 64 or 128 KB Flash, USB, CAN, 7 timers, 2 ADCs, 9 com. interfaces", STM32F103Cx8/B Datasheet, Sep. 2023.
+
+[2] STMicroelectronics, "Description of STM32F1 HAL and low-layer drivers", UM1850 User Manual, Feb. 2020.

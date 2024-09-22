@@ -31,7 +31,7 @@ Bài viết này sẽ hướng dẫn những bước cơ bản đầu tiên đ�
       - [Thông tin về project](#thông-tin-về-project)
       - [Giao diện STM32CubeMX (Device Configuration)](#giao-diện-stm32cubemx-device-configuration)
   - [Thư viện HAL](#thư-viện-hal)
-  - [Cấu trúc tên hàm](#cấu-trúc-tên-hàm)
+    - [Cấu trúc tên hàm](#cấu-trúc-tên-hàm)
     - [Mô hình lập trình](#mô-hình-lập-trình)
   - [Câu hỏi và bài tập](#câu-hỏi-và-bài-tập)
     - [Câu hỏi](#câu-hỏi)
@@ -247,7 +247,7 @@ Một số thành phần của thư viện HAL:
 - HAL_ADC
 - ...
 
-## Cấu trúc tên hàm
+### Cấu trúc tên hàm
 
 Thư viện HAL là **hướng tính năng** (feature-oriented). Mỗi hàm thực hiện một tính năng cụ thể. Ví dụ:
 
