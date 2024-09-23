@@ -438,3 +438,4 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 [1] STMicroelectronics, "Medium-density performance line Arm®-based 32-bit MCU with 64 or 128 KB Flash, USB, CAN, 7 timers, 2 ADCs, 9 com. interfaces", STM32F103Cx8/B Datasheet, Sep. 2023.
 
 [2] STMicroelectronics, "STM32F101xx, STM32F102xxm STM32F103xx, STM32F105xx and STM32F107xx advanced Arm®-based 32-bit MCUs", RM0008 Reference Manual, Feb. 2021.
+
