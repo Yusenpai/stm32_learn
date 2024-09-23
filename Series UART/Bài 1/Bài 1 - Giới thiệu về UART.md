@@ -111,10 +111,22 @@ Thư viện HAL_UART của STM32 cung cấp các cấu trúc và hàm cấu hìn
 /* Cấu trúc điều khiển của UART. Chứa các thông số của UART, buffer lưu trữ dữ liệu,..*/
 typedef struct UART_HandleTypeDef;
 
-/* Hàm truyền dữ liệu, chế độ blocking */
+/*
+* Hàm gửi dữ liệu, chế độ blocking
+* huart: con trỏ tới cấu trúc điều khiển UART
+* pData: con trỏ tới mảng lưu dữ liệu gửi đi
+* Size: số lượng byte gửi
+* Timeout: thời gian chờ
+*/
 HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
 
-/* Hàm nhận dữ liệu, chế độ blocking */
+/*
+* Hàm nhận dữ liệu, chế độ blocking
+* huart: con trỏ tới cấu trúc điều khiển UART
+* pData: con trỏ tới mảng lưu dữ liệu nhận về
+* Size: số lượng byte nhận
+* Timeout: thời gian chờ
+*/
 HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout)
 
 /* Hàm callback. Được gọi mỗi khi USART truyền xong */

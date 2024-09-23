@@ -16,11 +16,9 @@
     - [4.1 Tạo project](#41-tạo-project)
     - [4.2 Cấu hình GPIO trên STM32CubeMX](#42-cấu-hình-gpio-trên-stm32cubemx)
     - [4.3 Code](#43-code)
-    - [4.4 Kết quả](#44-kết-quả)
   - [5. Project: Điều khiển đèn bằng nút nhấn](#5-project-điều-khiển-đèn-bằng-nút-nhấn)
     - [5.1 Tạo project và cấu hình GPIO](#51-tạo-project-và-cấu-hình-gpio)
     - [5.2 Code](#52-code)
-    - [5.3 Kết quả](#53-kết-quả)
   - [6. Câu hỏi và bài tập](#6-câu-hỏi-và-bài-tập)
     - [Câu hỏi:](#câu-hỏi)
     - [Bài tập:](#bài-tập)
@@ -347,8 +345,6 @@ while (1) {
 }
 ```
 
-### 4.4 Kết quả
-
 ## 5. Project: Điều khiển đèn bằng nút nhấn
 
 Project sử dụng một chân GPIO ngõ vào để đọc trạng thái nút nhấn và một chân GPIO ngõ ra để nháy sáng đèn led.
@@ -391,8 +387,6 @@ while (1)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, readValue);
 }
 ```
-
-### 5.3 Kết quả
 
 ## 6. Câu hỏi và bài tập
 

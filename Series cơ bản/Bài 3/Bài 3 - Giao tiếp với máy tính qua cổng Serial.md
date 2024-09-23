@@ -29,10 +29,8 @@ Bài viết này sẽ hướng dẫn cách giao tiếp với máy tính qua cổ
 
 
 ## Kiến thức cần có
-
-- Bài 1
-- Bài 2 - Lập trình GPIO cho vi điều khiển STM32F103C8T6
-
+- [Bài 1 - Giới thiệu vi điều khiển STM32F103](<../Bài 1/Bài 1 - Giới thiệu vi điều khiển STM32, sử dụng STM32CubeIDE và thư viện HAL.md>)
+- [Bài 2 - Lập trình GPIO cho vi điều khiển STM32F103C8T6](<../Bài 2/Bài 2 - Lập trình GPIO cho vi điều khiển STM32F103C8T6.md>)
 ## Mục tiêu bài học
 
 - Làm quen với cổng Serial, giao thức UART, IC chuyển UART-USB.
