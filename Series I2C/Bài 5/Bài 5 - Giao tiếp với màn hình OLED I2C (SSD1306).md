@@ -24,8 +24,8 @@ Màn hình này sử dụng IC SSD1306 để điều khiển. Bài viết này s
 
 ## Kiến thức cần có
 
-- Series cơ bản.
-- Bài 1: Giới thiệu về giao thức I2C.
+- Series cơ bản
+- [Bài 1: Giới thiệu về giao thức I2C](<../Bài 1/Bài 1 - Giới thiệu về giao thức I2C.md>)
 
 ## Mục tiêu bài học
 
@@ -412,30 +412,30 @@ Trong hàm `main()`
 ```c++
 ...
 /* USER CODE BEGIN 2 */
-	/* Khởi tạo oled, tô màu đen lên màn hình */
-	SSD1306_Init(&oled, &hi2c1);
-	SSD1306_Fill(&oled, SSD1306_BLACK);
-	SSD1306_UpdateScreen(&oled);
+/* Khởi tạo oled, tô màu đen lên màn hình */
+SSD1306_Init(&oled, &hi2c1);
+SSD1306_Fill(&oled, SSD1306_BLACK);
+SSD1306_UpdateScreen(&oled);
 
-	/* Đợi màn hình khởi tạo xong */
-	HAL_Delay(100);
+/* Đợi màn hình khởi tạo xong */
+HAL_Delay(100);
 
-	/* Viết "Hello World", font chữ 11x18, ở vị trí 0,0 trên màn hình */
-	SSD1306_SetCursor(&oled, 0, 0);
-	SSD1306_WriteString(&oled, "Hello World", Font_11x18, SSD1306_WHITE);
+/* Viết "Hello World", font chữ 11x18, ở vị trí 0,0 trên màn hình */
+SSD1306_SetCursor(&oled, 0, 0);
+SSD1306_WriteString(&oled, "Hello World", Font_11x18, SSD1306_WHITE);
 
-	/* Viết "Welcome", font chữ 11x18, ở vị trí 0,36 trên màn hình */
-	SSD1306_SetCursor(&oled, 0, 36);
-	SSD1306_WriteString(&oled, "Welcome", Font_11x18, SSD1306_WHITE);
+/* Viết "Welcome", font chữ 11x18, ở vị trí 0,36 trên màn hình */
+SSD1306_SetCursor(&oled, 0, 36);
+SSD1306_WriteString(&oled, "Welcome", Font_11x18, SSD1306_WHITE);
 
-	/* Vòng for để vẽ hình chữ nhật 28x64 lên màn hình */
-	for (uint8_t i = 0; i < 28; i++)
-		for (uint8_t j = 0; j < 64; j++)
-			SSD1306_DrawPixel(&oled, 100 + i, j, SSD1306_WHITE);
+/* Vòng for để vẽ hình chữ nhật 28x64 lên màn hình */
+for (uint8_t i = 0; i < 28; i++)
+	for (uint8_t j = 0; j < 64; j++)
+		SSD1306_DrawPixel(&oled, 100 + i, j, SSD1306_WHITE);
 
-	/* Cập nhật thay đổi lên màn hình */
-	SSD1306_UpdateScreen(&oled);
-	/* USER CODE END 2 */
+/* Cập nhật thay đổi lên màn hình */
+SSD1306_UpdateScreen(&oled);
+/* USER CODE END 2 */
 ...
 ```
 

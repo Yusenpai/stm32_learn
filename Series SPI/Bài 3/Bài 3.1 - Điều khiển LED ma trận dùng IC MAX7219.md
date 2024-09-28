@@ -72,7 +72,7 @@ Sau khoảng thời gian T, ta tắt hàng 2 đi và điều khiển hàng 3:
 
 ![alt text](<images/Screenshot 2024-09-18 at 23.01.05 copy 3.png>)
 
-Làm tương tự, tới hàng 8 thì quay về hàng 1. Việc lặp lại được thực hiện ở tần số cao, mắt người sẽ không theo kịp và nhìn thấy hình ảnh.
+Làm tương tự, tới hàng 8 thì quay về hàng 1. Lặp lại ở tần số cao, mắt người sẽ không theo kịp và nhìn thấy hình ảnh.
 
 Đây chính là kỹ thuật LED Multiplexing (đa hợp LED). Để điều khiển ma trận LED `m x n` cần sử dụng `m + n` chân để điều khiển; ít hơn nhiều so với điều khiển từng LED một (cần `m x n` chân)
 

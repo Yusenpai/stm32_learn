@@ -1,6 +1,8 @@
 # Bài 2: Giao tiếp với IC 74HC595 dùng SPI
 
-**74HC595** là IC thanh ghi dịch 8 bit, ngõ vào nối tiếp, ngõ ra song song. Cấu tạo và nguyên lý hoạt động của 74HC595 tương thích với giao thức SPI. Bài viết này sẽ hướng dẫn sử dụng ngoại vi SPI của STM32F103 để giao tiếp với IC 74HC595.
+**74HC595** là một thanh ghi dịch 8 bit, ngõ vào nối tiếp, ngõ ra song song. Cấu tạo và nguyên lý hoạt động của 74HC595 tương thích với giao thức SPI. 
+
+Bài viết này sẽ hướng dẫn sử dụng ngoại vi SPI của STM32F103 để giao tiếp với IC 74HC595.
 
 ## Mục lục
 
@@ -9,6 +11,8 @@
 	- [Kiến thức cần có](#kiến-thức-cần-có)
 	- [Mục tiêu bài học](#mục-tiêu-bài-học)
 	- [74HC595](#74hc595)
+		- [D Flip-flop](#d-flip-flop)
+		- [Thanh ghi dịch](#thanh-ghi-dịch)
 	- [Sơ đồ mạch điện](#sơ-đồ-mạch-điện)
 	- [Project: Điều khiển 8 LED bằng thanh ghi dịch](#project-điều-khiển-8-led-bằng-thanh-ghi-dịch)
 		- [Tạo project mới, cấu hình SPI và GPIO](#tạo-project-mới-cấu-hình-spi-và-gpio)
@@ -22,8 +26,7 @@
 ## Kiến thức cần có
 
 - Series cơ bản
-- Bài 1: Giới thiệu về giao thức SPI.
-
+- [Bài 1: Giới thiệu về giao thức SPI](<../Bài 1/Bài 1 - Giới thiệu về giao thức SPI.md>)
 ## Mục tiêu bài học
 
 - Hiểu được cách giao tiếp, điều khiển 74HC595 qua SPI.
@@ -33,6 +36,10 @@
 **74HC595** là IC thanh ghi dịch 8 bit, ngõ vào nối tiếp, ngõ ra song song.
 
 ![alt text](<images/Screenshot 2024-09-16 at 13.46.25.png>)
+
+Cấu tạo bên trong gồm có các D Flip-flop, D Latch và các cổng đệm ngõ ra.
+
+### D Flip-flop
 
 **D Flip-flop** (viết tắt - DFF) là một mạch số, là một đơn vị lưu trữ dữ liệu nhỏ nhất. Nó có thể lưu được hai giá trị 0 hoặc 1. DFF gồm các chân D, Q, Q# (Q đảo) và CLK (chân có hình tam giác). Ngõ ra Q (và Q#) thể hiện giá trị đang lưu trong DFF. Ngõ vào D để cập nhật giá trị trong DFF. 
 
@@ -44,11 +51,13 @@ Khi DFF hoạt động bình thường, giá trị trong DFF được lưu trữ
 
 Tham khảo: [The D Flip-Flop (Quickstart Tutorial)](https://www.build-electronic-circuits.com/d-flip-flop/)
 
-Mắc nối tiếp các DFF với nhau (ngõ ra của DFF này nối với ngõ vào của DFF kia), ta được **thanh ghi dịch** (shift register).
+### Thanh ghi dịch
+
+Mắc nối tiếp các DFF với nhau, ngõ ra của DFF này nối với ngõ vào của DFF kia, ta được **thanh ghi dịch** (shift register).
 
 ![alt text](<images/Screenshot 2024-09-16 at 14.12.25.png>)
 
-Nguyên lý hoạt động của thanh ghi dịch: Khi tín hiệu CK cạnh lên, DFF sẽ lưu và gán giá trị nằm trong DFF ngay trước nó. Cụ thể: DFF thứ 3 sẽ lưu giá trị của DFF thứ 2, DFF thứ 2 sẽ lưu giá trị của DFF thứ 1, DFF thứ 1 sẽ lưu giá trị của ngõ vào SI. Kết quả là, tất cả các giá trị lưu trong các DFF sẽ dịch về sau 1 đơn vị.
+Nguyên lý hoạt động của thanh ghi dịch: Khi tín hiệu CK cạnh lên, DFF sẽ lưu và gán giá trị nằm trong DFF ngay trước nó. DFF thứ 3 sẽ lưu giá trị của DFF thứ 2, DFF thứ 2 sẽ lưu giá trị của DFF thứ 1, DFF thứ 1 sẽ lưu giá trị của ngõ vào SI. Kết quả là, tất cả các giá trị lưu trong các DFF sẽ dịch sang DFF tiếp theo 1 bit.
 
 ![alt text](<images/Screenshot 2024-09-16 at 14.17.33.png>)
 
@@ -64,15 +73,14 @@ Bên trong 74HC595 có 8 DFF mắc nối tiếp nhau thành thanh ghi dịch 8 b
 
 Mô tả các chân của 74HC595:
 
-
-- VCC và GND: các chân cấp nguồn. Cấp nguồn từ 2V - 6V.
-- Q0..7 (hoặc QA..H): các chân ngõ ra song song của thanh ghi dịch.
-- DS: ngõ vào nối tiếp của thanh ghi dịch
-- Q7': ngõ ra nối tiếp của thanh ghi dịch
-- OE#: chân điều khiển ngõ ra song song. Khi OE# = 0 thì ngõ ra được kích hoạt. OE# = 1 thì ngõ ra trở kháng cao
-- MR#: chân reset mạch. MR# = 0: reset thanh ghi dịch về 0
-- SH_CP (hoặc SCLK, SCK): Chân clock của thanh ghi dịch. Khi chân này cạnh lên, thanh ghi dịch một đơn vị.
-- ST_CP (hoặc LATCH): Chân latch. Khi ST_CP = 1, giá trị từ thanh ghi dịch lưu vào bộ đệm. ST_CP = 0, bộ đệm không thay đổi.
+- **VCC và GND**: các chân cấp nguồn. Cấp nguồn từ 2V - 6V.
+- **Q0..7 (hoặc QA..H)**: các chân ngõ ra song song của thanh ghi dịch.
+- **DS**: ngõ vào nối tiếp của thanh ghi dịch
+- **Q7'**: ngõ ra nối tiếp của thanh ghi dịch
+- **OE#**: chân điều khiển ngõ ra song song. Khi OE# = 0 thì ngõ ra được kích hoạt. OE# = 1 thì ngõ ra trở kháng cao
+- **MR#**: chân reset mạch. MR# = 0: reset thanh ghi dịch về 0
+- **SH_CP (hoặc SCLK, SCK)**: Chân clock của thanh ghi dịch. Khi chân này cạnh lên, thanh ghi dịch một đơn vị.
+- **ST_CP (hoặc LATCH)**: Chân latch. Khi ST_CP = 1, giá trị từ thanh ghi dịch lưu vào bộ đệm. ST_CP = 0, bộ đệm không thay đổi.
 
 ![alt text](<images/Screenshot 2024-09-16 at 13.49.49.png>)
 
@@ -124,28 +132,28 @@ HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, const uint8_t *pData
 Khối `while()`:
 
 ```c++
-	/* Infinite loop */
-	/* USER CODE BEGIN WHILE */
-	while (1) {
-		/* USER CODE END WHILE */
+/* Infinite loop */
+/* USER CODE BEGIN WHILE */
+while (1) {
+	/* USER CODE END WHILE */
 
-		/* USER CODE BEGIN 3 */
-		/* Tạo biến a. Từ khóa static làm cho biến a lưu lại khi kết thúc vòng while */
-		static uint8_t a = 0;
+	/* USER CODE BEGIN 3 */
+	/* Tạo biến a. Từ khóa static làm cho biến a lưu lại khi kết thúc vòng while */
+	static uint8_t a = 0;
 
-		/* Kéo chân LATCH xuống để bắt đầu truyền */
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
+	/* Kéo chân LATCH xuống để bắt đầu truyền */
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
 
-		/* Dùng SPI gửi dữ liệu tới thanh ghi dịch. Gửi 1 byte (số a) qua spi2 */
-		HAL_SPI_Transmit(&hspi2, &a, 1, 100);
+	/* Dùng SPI gửi dữ liệu tới thanh ghi dịch. Gửi 1 byte (số a) qua spi2 */
+	HAL_SPI_Transmit(&hspi2, &a, 1, 100);
 
-		/* Đặt chân LATCH về như cũ */
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
+	/* Đặt chân LATCH về như cũ */
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
 
-		a++;
-		HAL_Delay(500);
-	}
-	/* USER CODE END 3 */
+	a++;
+	HAL_Delay(500);
+}
+/* USER CODE END 3 */
 ```
 
 ## Câu hỏi và bài tập

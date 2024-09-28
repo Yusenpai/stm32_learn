@@ -13,7 +13,7 @@ Bài ngày hôm nay sẽ tìm hiểu sâu về giao thức UART, cách sử dụ
 	- [USART](#usart)
 		- [USART trên vi điều khiển STM32F103](#usart-trên-vi-điều-khiển-stm32f103)
 		- [Cấu hình USART trên STM32 với STM32CubeMX](#cấu-hình-usart-trên-stm32-với-stm32cubemx)
-		- [Kích hoạt ngắt cho UART](#kích-hoạt-ngắt-cho-uart)
+		- [Ngắt của USART](#ngắt-của-usart)
 	- [Sử dụng thư viện HAL\_UART](#sử-dụng-thư-viện-hal_uart)
 	- [Câu hỏi và bài tập](#câu-hỏi-và-bài-tập)
 		- [Câu hỏi](#câu-hỏi)
@@ -30,7 +30,7 @@ Các đặc điểm của UART:
 
 ## Khung truyền dữ liệu của UART
 
-Dữ liệu được truyền đi bằng giao thức UART theo quy tắc đặc biệt, gọi là khung truyền:
+Dữ liệu được truyền đi bằng giao thức UART theo một khung truyền đặc biệt:
 
 ![alt text](images/1-2.png)
 
@@ -41,7 +41,7 @@ Một khung truyền của UART gồm:
 - Sp: Stop bit - bit dừng, luôn ở mức cao. Dài từ 1 - 2 bit.
 - IDLE: Trạng thái nghỉ - Khi UART không truyền dữ liệu, trạng thái các chân TX, RX luôn ở mức cao.
 
-Để hai thiết bị dùng UART có thể giao tiếp với nhau, các thông số sau phải sử dụng chung:
+Hai thiết bị giao tiếp với nhau phải cùng các thông số:
 
 - Mức điện áp
 - Tốc độ baud (baudrate)
@@ -51,11 +51,11 @@ Một khung truyền của UART gồm:
 
 ## USART
 
-USART (Universal ***Synchronous*** Asynchronous Receiver/Transmitter) là giao thức mở rộng của UART, có thêm tín năng truyền dữ liệu đồng bộ (có thêm một chân clock). Giao thức này tương thích với UART, ngoài ra còn hỗ trợ một số giao tiếp đồng bộ khác.
+USART (Universal ***Synchronous*** Asynchronous Receiver/Transmitter) là giao thức mở rộng của UART, có thêm tính năng truyền dữ liệu đồng bộ (có thêm một chân clock). Giao thức này tương thích với UART, ngoài ra còn hỗ trợ một số giao tiếp đồng bộ khác.
 
 ### USART trên vi điều khiển STM32F103
 
-Trên vi điều khiển STM32F103 có ba ngoại vi USART hoạt động độc lập nhau
+Trên vi điều khiển STM32F103 có ba ngoại vi USART hoạt động độc lập nhau.
 
 Mỗi ngoại vi có thể được lập trình để giao tiếp ở các chế độ:
 
@@ -85,27 +85,25 @@ Bảng *Configuration* hiện ra. Ở đây có thể tìm thấy các thông s�
   - Data direction: chiều đi của dữ liệu. Chỉ truyền, chỉ nhận hoặc cả hai.
   - Oversampling: lấy mẫu quá mức
 
-> Lưu ý: Nên điều chỉnh các thông số trong Basic Paremeters cho phù hợp. Thông số trong Advanced Parameters có thể để mặc định.
+> Lưu ý: Điều chỉnh các thông số trong Basic Paremeters cho phù hợp. Thông số trong Advanced Parameters để mặc định.
 
 
 Ngoài ra các chân truyền UART được sử dụng là `PA9` (TX) và `PA10` (RX). Có thể nhấn Ctrl + Click + giữ chuột vào chân `PA9` để xem các chân thay thế (chân `PB6`). Tương tự có thể đổi chân RX sang `PB7`.
 
 ![alt text](<images/Screenshot 2024-09-20 at 16.24.37.png>)
 
-> Lưu ý: Để đổi chân TX sang PB6, click chuột vào chân PB6 rồi chọn USART1_TX
+### Ngắt của USART
 
-### Kích hoạt ngắt cho UART
+Khi USART truyền/nhận xong dữ liệu, khi thanh ghi truyền đi hay nhận về đang trống,... USART sẽ gửi một ngắt đến CPU để phục vụ ngắt đó.
 
-Khi USART truyền xong dữ liệu hoặc nhận xong dữ liệu, khi thanh ghi truyền đi hay nhận về đang trống,... USART sẽ gửi một ngắt đến CPU để phục vụ ngắt đó.
-
-Để bật các ngắt này trong STM32CubeMX, trong bảng 
-*Configuration*, chọn tab *NVIC Settings*, tích vào ô Enabled ở dòng *USART1 global interrupt*. Sau đó có thể sử dụng các ngắt do thư viện HAL cung cấp.
+Để bật ngắt này trong STM32CubeMX, trong bảng 
+*Configuration*, chọn tab *NVIC Settings*, tích vào ô Enabled ở dòng *USART1 global interrupt*.
 
 ![](<images/Screenshot 2024-09-22 at 14.05.59.png>)
 
 ## Sử dụng thư viện HAL_UART
 
-Thư viện HAL_UART của STM32 cung cấp các cấu trúc và hàm cấu hình và điều khiển hoạt động của USART. Một số cấu trúc và hàm cơ bản:
+Thư viện HAL_UART của STM32 cung cấp các cấu trúc và hàm cấu hình và điều khiển hoạt động của USART:
 
 ```c++
 /* Cấu trúc điều khiển của UART. Chứa các thông số của UART, buffer lưu trữ dữ liệu,..*/

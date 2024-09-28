@@ -51,7 +51,7 @@ Trên thị trường thường bán module kết hợp LED 7 đoạn và MAX721
 
 ## Sơ đồ mạch điện
 
-Để sử dụng MAX7219, ta mắc mạch điện như sau:
+Để sử dụng module, ta mắc mạch điện như sau:
 
 - PB15 (MOSI) <---> DIN
 - PB13 (SCK) <---> CLK

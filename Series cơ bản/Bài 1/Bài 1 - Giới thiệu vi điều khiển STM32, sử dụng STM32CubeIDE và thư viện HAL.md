@@ -46,6 +46,7 @@ Bài viết này sẽ hướng dẫn những bước cơ bản đầu tiên đ�
 ## Mục tiêu bài học
 
 - Học cách sử dụng phần mềm STM32CubeIDE
+- Làm quen với thư viện HAL của STM32
 
 ## Vi điều khiển STM32
 
@@ -79,40 +80,40 @@ Bài viết này sẽ hướng dẫn những bước cơ bản đầu tiên đ�
 
 Series bài học này sẽ sử dụng vi điều khiển STM32F103C8T6. Đây là vi điều khiển thuộc dòng chủ đạo. Các thông số gồm:
 
-- CPU: ARM Cortex-M3, tần số tối đa 72MHz.
-- Bộ nhớ
+- **CPU: ARM Cortex-M3, tần số tối đa 72MHz.**
+- **Bộ nhớ**
   - 64KB Flash
   - 20KB RAM
-- Điện áp cấp, xung clock
+- **Điện áp cấp, xung clock**
   - Hoạt động với 2.0 - 3.6V
-  - Dao động thạch anh 4 - 16MHz
+  - Dao động thạch anh ngoài 4 - 16MHz
   - Dao động RC nội 8MHz
   - Dao động RC nội 40kHz
   - Tích hợp PLL (mạch nhân tần số) cho CPU
-  - Dạo động thạch anh 32kHz
-- 2x 12-bit, 1us ADC, tối đa 16 kênh
+  - Dạo động thạch anh ngoài 32.768kHz
+- **2x 12-bit, 1us ADC, tối đa 16 kênh**
   - Điện áp chuyển đổi: 0 - 3.6V
   - Cảm biến nhiệt độ
-- DMA (Direct Memory Access)
+- **DMA (Direct Memory Access)**
   - 7 kênh DMA
   - Ngoại vi hỗ trợ: Timer, ADC, SPI, I2C và USART
-- 37 chân GPIO
+- **37 chân GPIO**
   - Tất cả đều có ngắt ngoài, ánh xạ trên 16 vector ngắt ngoài.
   - Gần như mọi chân đều chịu được 5V
-- Debug
+- **Debug**
   - Giao tiếp SWD và JTAG
-- 7 Timer
+- **7 Timer**
   - 3x timer 16-bit, mỗi timer có tới 4 kênh IC/OC/PWM hoặc kênh đếm xung và ngõ vào encoder.
-  - 1x timer 16-bit, điều khiển động cơ với PWM, tự động tạo deadtime và dừng khẩn cấp
+  - 1x timer 16-bit, điều khiển động cơ với PWM, tạo deadtime và dừng khẩn cấp
   - 2x watchdog timer
   - 1x SysTick timer, timer 24-bit đếm xuống
-- 9 ngoại vi cho các giao tiếp truyền thông
+- **9 ngoại vi cho các giao tiếp truyền thông**
   - 2x I2C (SMBus/PMBus)
   - 3x USART (ISO 7816, LIN, IrDA, modem)
   - 2x SPI (18Mbit/s)
   - 1x CAN (2.0B)
   - 1x USB 2.0 full-speed
-- Khối tính toán CRC
+- **Khối tính toán CRC**
 
 ![alt text](images/function.png)
 
@@ -183,7 +184,7 @@ Cửa sổ MCUFinder sẽ mở ra, cho phép bạn tìm vi điều khiển muố
 
 ![alt text](images/hello.png)
 
-Một cửa sổ mới sẽ hiện ra, hỏi rằng có muốn thay đổi sang giao diện *CubeMX* không. Ta chọn **No**, tạm thời bỏ qua.
+Một cửa sổ mới sẽ hiện ra, hỏi rằng có muốn thay đổi sang giao diện *Device Configuration* không. Ta chọn **No**, tạm thời bỏ qua.
 
 #### Thông tin về project
 
@@ -192,16 +193,16 @@ Sau khi tạo xong project, *workspace* sẽ có sự thay đổi. Trong cửa s
 ![alt text](<images/Screenshot 2024-09-11 at 20.48.54.png>)
 
 Các tập tin và thư mục chính:
-- Includes: chứa các đường dẫn tới các thư viện cần sử dụng.
-- Core: chứa phần code chính của project
-  - Core/Inc: chứa các tập tin .h
-  - Core/Src: chứa các tập tin .c và file main.c
-  - Core/Startup: chứa tập tin assembly khởi động cho vi điều khiển
-- Driver: chứa các thư viện
+- **Includes**: chứa các đường dẫn tới các thư viện cần sử dụng.
+- **Core**: chứa phần code chính của project
+  - **Core/Inc**: chứa các tập tin .h
+  - **Core/Src**: chứa các tập tin .c và file main.c
+  - **Core/Startup**: chứa tập tin assembly khởi động cho vi điều khiển
+- **Driver**: chứa các thư viện
   - CMSIS: chứa thư viện CMSIS
   - STM32F1xx_HAL_Driver: chứa thư viện HAL của STM32
-- <tên project>.ioc: tệp tin cấu hình STM32. Sẽ sử dụng trong giao diện *STM32CubeMX*.
-- STM32F103C8TX_FLASH.ld: tập tin linker script.
+- **<tên project>.ioc**: tệp tin cấu hình STM32. Sẽ sử dụng trong giao diện *STM32CubeMX*.
+- **STM32F103C8TX_FLASH.ld**: tập tin linker script.
 
 Ở trên cùng của màn hình là cửa sổ điều khiển:
 
@@ -211,7 +212,7 @@ Các tập tin và thư mục chính:
 
 #### Giao diện STM32CubeMX (Device Configuration)
 
-Để mở giao diện này, ở góc trên bên phải, ta chọn nút **Open Perspective** (bên cạnh kính lúp). Một cửa sổ hiện ra, chọn *Device Configuration* rồi chọn **Open**.
+Để mở giao diện này, ở góc trên bên phải, ta chọn nút **Open Perspective** (nút cửa sổ có dấu cộng, bên cạnh kính lúp). Một cửa sổ hiện ra, chọn *Device Configuration* rồi chọn **Open**.
 
 ![alt text](<images/Screenshot 2024-09-11 at 21.05.30.png>)
 
@@ -219,14 +220,14 @@ Trong cửa sổ *Project Explorer*, nhấp đúp chuột vào tập tin .ioc đ
 
 ![alt text](<images/Screenshot 2024-09-11 at 21.08.59.png>)
 
-Trong cửa sổ mới, có 4 cửa sổ phụ:
+Trong cửa sổ mới, có 4 tab:
 
-- Pinout & Configuration: Cấu hình các chân và các ngoại vi của vi điều khiển
-- Clock Configuration: Cấu hình clock tree (cây clock)
-- Project Manager: Cấu hình một số cài đặt của project
-- Tools: Một số công cụ
+- **Pinout & Configuration**: Cấu hình các chân và các ngoại vi của vi điều khiển
+- **Clock Configuration**: Cấu hình clock tree (cây clock)
+- **Project Manager**: Cấu hình một số cài đặt của project
+- **Tools**: Một số công cụ
 
-Sau khi cấu hình xong, bấm **Ctrl + S** để lưu. Phần mềm sẽ hỏi muốn tự động tạo code không. Chọn *Yes*. Chọn *Yes* lần nữa để chuyển sang giao diện C/C++.
+Sau khi cấu hình xong, bấm **Ctrl + S** để lưu. Phần mềm sẽ hỏi muốn tự động tạo code không. Chọn **Yes**. Chọn **Yes** lần nữa để chuyển sang giao diện C/C++.
 
 Lúc này tập tin `main.c` sẽ tự động mở lên workspace:
 
@@ -282,9 +283,9 @@ Cấu trúc tên hàm chung:
 
 Thư viện HAL sử dụng 3 mô hình lập trình:
 
-- Blocking: hàm được gọi sẽ phải thực hiện xong hoặc hết thời gian chờ, sau đó mới trả về hàm `main()` và tiếp tục chạy.
-- Ngắt: hàm được gọi sẽ kích hoạt một ngắt nào đó rồi trả về. Hàm phục vụ ngắt sẽ xử lí dữ liệu khi ngắt xảy ra.
-- DMA: hàm được gọi sẽ kích hoạt DMA rồi trả về. DMA giúp di chuyển dữ liệu từ vùng nhớ này sang vùng nhớ khác mà không cần dùng tới CPU.
+- **Blocking**: hàm được gọi sẽ phải thực hiện xong hoặc hết thời gian chờ, sau đó mới trả về hàm `main()` và tiếp tục chạy.
+- **Ngắt**: hàm được gọi sẽ kích hoạt một ngắt nào đó rồi trả về, cho CPU xử lý lệnh tiếp theo mà không phải chờ đợi. Hàm phục vụ ngắt sẽ xử lí dữ liệu khi ngắt xảy ra.
+- **DMA**: hàm được gọi sẽ kích hoạt DMA rồi trả về, cho CPU xử lý lệnh tiếp theo mà không phải chờ đợi. DMA giúp di chuyển dữ liệu từ vùng nhớ này sang vùng nhớ khác mà không cần dùng tới CPU.
 
 Ví dụ về 3 mô hình lập trình:
 

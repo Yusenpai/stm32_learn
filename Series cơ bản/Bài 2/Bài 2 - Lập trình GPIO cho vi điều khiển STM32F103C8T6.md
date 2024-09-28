@@ -27,7 +27,7 @@
 
 ## 1. Kiến thức cần có
 
-- Bài 1:  Giới thiệu STM32, sử dụng STM32CubeIDE và thư viện HAL
+- [Bài 1 - Giới thiệu vi điều khiển STM32, sử dụng STM32CubeIDE và thư viện HAL](<../Bài 1/Bài 1 - Giới thiệu vi điều khiển STM32, sử dụng STM32CubeIDE và thư viện HAL.md>)
 
 ## 2. Mục tiêu bài học
 

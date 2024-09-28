@@ -25,8 +25,8 @@ Bài viết này sẽ hướng dẫn sử dụng STM32F103 để giao tiếp v�
 
 ## Kiến thức cần có
 
-- Bài 1: Giới thiệu về giao thức I2C
 - Series cơ bản
+- [Bài 1: Giới thiệu về giao thức I2C](<../Bài 1/Bài 1 - Giới thiệu về giao thức I2C.md>)
 
 ## Mục tiêu bài học
 
@@ -432,11 +432,11 @@ Khởi tạo EEPROM trong `main()`:
 
 ```c++
 ...
-	/* USER CODE BEGIN 2 */
-	/* Khởi tạo eeprom */
-	AT24C64_Init(&eeprom, &hi2c1, 0x50);
+/* USER CODE BEGIN 2 */
+/* Khởi tạo eeprom */
+AT24C64_Init(&eeprom, &hi2c1, 0x50);
 
-	/* USER CODE END 2 */
+/* USER CODE END 2 */
 ...
 ```
 
@@ -445,29 +445,29 @@ Khối `while()`:
 ```c++
 ...
 /* Infinite loop */
-	/* USER CODE BEGIN WHILE */
-	/* msg1 sẽ được ghi vào EEPROM. msg2 là nơi chứa khi đọc dữ liệu về */
-	char msg1[] = "hello";
-	char msg2[10];
-	while (1) {
-		/* USER CODE END WHILE */
+/* USER CODE BEGIN WHILE */
+/* msg1 sẽ được ghi vào EEPROM. msg2 là nơi chứa khi đọc dữ liệu về */
+char msg1[] = "hello";
+char msg2[10];
+while (1) {
+	/* USER CODE END WHILE */
 
-		/* USER CODE BEGIN 3 */
-		/* Ghi msg1 vào địa chỉ 0x10 của EEPROM, số lượng byte là 5 */
-		AT24C64_Write(&eeprom, 0x10, (uint8_t*) msg1, 5);
+	/* USER CODE BEGIN 3 */
+	/* Ghi msg1 vào địa chỉ 0x10 của EEPROM, số lượng byte là 5 */
+	AT24C64_Write(&eeprom, 0x10, (uint8_t*) msg1, 5);
 
-		/* Đọc lại 5 ký tự ở 0x10 và lưu vào msg2 */
-		AT24C64_Read(&eeprom, 0x10, (uint8_t*) msg2, 5);
+	/* Đọc lại 5 ký tự ở 0x10 và lưu vào msg2 */
+	AT24C64_Read(&eeprom, 0x10, (uint8_t*) msg2, 5);
 
-		/* In lên  Serial*/
-		HAL_UART_Transmit(&huart1, (uint8_t*) msg2, 5, 100);
+	/* In lên  Serial*/
+	HAL_UART_Transmit(&huart1, (uint8_t*) msg2, 5, 100);
 
-		/* Xóa hết dữ liệu ở msg2 */
-		memset(msg2, 0, sizeof(msg2));
+	/* Xóa hết dữ liệu ở msg2 */
+	memset(msg2, 0, sizeof(msg2));
 
-		HAL_Delay(1000);
-	}
-	/* USER CODE END 3 */
+	HAL_Delay(1000);
+}
+/* USER CODE END 3 */
 ...
 ```
 
@@ -481,6 +481,7 @@ Mở ứng dụng giao tiếp với cổng Serial nối với STM32F103, kết n
 
 ### Câu hỏi
 
+1. EEPROM là gì? Khác gì so với SRAM?
 1. AT24C64 là bộ nhớ có dung lượng 8KByte. Địa chỉ tối đa có thể truy cập ?
 
 ### Bài tập

@@ -24,8 +24,8 @@
 
 ## Kiến thức cần có
 
-- Bài 1: Giới thiệu về giao thức I2C
 - Series cơ bản
+- [Bài 1: Giới thiệu về giao thức I2C](<../Bài 1/Bài 1 - Giới thiệu về giao thức I2C.md>)
 
 ## Mục tiêu bài học
 
@@ -37,7 +37,7 @@
 
 ![ds1307_module](https://cdn-shop.adafruit.com/970x728/3296-03.jpg)
 
-IC này sử dụng giao thức truyền thông **I2C** để đọc/ghi dữ liệu. Trên thị trường có nhiều loại module sử dụng DS1307, nhìn chung chúng đều có các chân:
+**DS1307** sử dụng giao thức truyền thông **I2C** để đọc/ghi dữ liệu. Trên thị trường có nhiều loại module sử dụng DS1307, nhìn chung chúng đều có các chân:
 
 - 5V hoặc VCC hoặc VDD: chân cấp nguồn cho mạch. Nối với nguồn 5V.
 - GND hoặc VSS: chân nối đất (0V).
@@ -53,7 +53,9 @@ Sơ đồ nối dây giữa STM32F103 và module DS1307:
 
 ![schematic](./images/schematic.png)
 
-> Lưu ý: điện trở R1, R2 là điện trở kéo lên trong giao thức I2C. Phần lớn các module đều có gắn điện trở này, do đó có thể bỏ qua.
+> Lưu ý: điện trở R1, R2 là điện trở kéo lên trong giao thức I2C. Phần lớn các module đều có gắn điện trở này, do đó có thể bỏ qua nếu mắc với module.
+> 
+> Giá trị R1 và R2 nằm trong khoảng từ 1k-10k.
 
 ## Project: Giao tiếp với DS1307 và in thời gian qua Serial
 
