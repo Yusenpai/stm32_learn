@@ -5,14 +5,14 @@ Bài viết này hướng dẫn các thao tác cơ bản trên phần mềm STM3
 ## Mục lục
 
 - [Bài 1.1: Các thao tác cơ bản trên phầm mềm STM32CubeIDE](#bài-11-các-thao-tác-cơ-bản-trên-phầm-mềm-stm32cubeide)
-	- [Mục lục](#mục-lục)
-	- [Mục tiêu bài học](#mục-tiêu-bài-học)
-	- [Viết code vào file main.c sao cho đúng ?](#viết-code-vào-file-mainc-sao-cho-đúng-)
-	- [File stm32f1xx\_it.c](#file-stm32f1xx_itc)
-	- [Thêm file mới](#thêm-file-mới)
-	- [Thêm file có sẵn](#thêm-file-có-sẵn)
-	- [Thêm thư viện ngoài](#thêm-thư-viện-ngoài)
-	- [Phím tắt khi viết code](#phím-tắt-khi-viết-code)
+  - [Mục lục](#mục-lục)
+  - [Mục tiêu bài học](#mục-tiêu-bài-học)
+  - [Viết code vào file main.c sao cho đúng ?](#viết-code-vào-file-mainc-sao-cho-đúng-)
+  - [File stm32f1xx\_it.c](#file-stm32f1xx_itc)
+  - [Thêm file mới](#thêm-file-mới)
+  - [Thêm file có sẵn](#thêm-file-có-sẵn)
+  - [Thêm thư viện ngoài](#thêm-thư-viện-ngoài)
+  - [Phím tắt khi viết code](#phím-tắt-khi-viết-code)
 
 ## Mục tiêu bài học
 
