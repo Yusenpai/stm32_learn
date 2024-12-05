@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-#define DS1307_I2C_ADDR 0x68
+#define DS1307_I2C_ADDR (0x68 << 1)
 #define DS1307_REG_SECOND 0x00
 #define DS1307_REG_MINUTE 0x01
 #define DS1307_REG_HOUR 0x02
