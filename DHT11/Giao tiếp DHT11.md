@@ -5,18 +5,18 @@ DHT11 là một module đo nhiệt độ, độ ẩm. Thiết bị này đặc b
 ## Mục lục
 
 - [Giao tiếp DHT11](#giao-tiếp-dht11)
-	- [Mục lục](#mục-lục)
-	- [Kiến thức cần có](#kiến-thức-cần-có)
-	- [Mục tiêu bài học](#mục-tiêu-bài-học)
-	- [DHT11](#dht11)
-	- [Sơ đồ mạch kết nối tới vi điều khiển](#sơ-đồ-mạch-kết-nối-tới-vi-điều-khiển)
-	- [Quá trình giao tiếp với DHT11](#quá-trình-giao-tiếp-với-dht11)
-		- [Bước 1: MCU gửi START](#bước-1-mcu-gửi-start)
-		- [Bước 2: MCU chờ phản hồi từ DHT11](#bước-2-mcu-chờ-phản-hồi-từ-dht11)
-		- [Bước 3: MCU đọc 40 bit dữ liệu từ DHT11](#bước-3-mcu-đọc-40-bit-dữ-liệu-từ-dht11)
-		- [Bước 4: MCU kiểm tra checksum](#bước-4-mcu-kiểm-tra-checksum)
-	- [Project: Đọc nhiệt độ độ ẩm với DHT11](#project-đọc-nhiệt-độ-độ-ẩm-với-dht11)
-	- [Câu hỏi](#câu-hỏi)
+  - [Mục lục](#mục-lục)
+  - [Kiến thức cần có](#kiến-thức-cần-có)
+  - [Mục tiêu bài học](#mục-tiêu-bài-học)
+  - [DHT11](#dht11)
+  - [Sơ đồ mạch kết nối tới vi điều khiển](#sơ-đồ-mạch-kết-nối-tới-vi-điều-khiển)
+  - [Quá trình giao tiếp với DHT11](#quá-trình-giao-tiếp-với-dht11)
+    - [Bước 1: MCU gửi START](#bước-1-mcu-gửi-start)
+    - [Bước 2: MCU chờ phản hồi từ DHT11](#bước-2-mcu-chờ-phản-hồi-từ-dht11)
+    - [Bước 3: MCU đọc 40 bit dữ liệu từ DHT11](#bước-3-mcu-đọc-40-bit-dữ-liệu-từ-dht11)
+    - [Bước 4: MCU kiểm tra checksum](#bước-4-mcu-kiểm-tra-checksum)
+  - [Project: Đọc nhiệt độ độ ẩm với DHT11](#project-đọc-nhiệt-độ-độ-ẩm-với-dht11)
+  - [Câu hỏi](#câu-hỏi)
 
 ## Kiến thức cần có
 
