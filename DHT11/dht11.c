@@ -20,8 +20,8 @@
 
 uint8_t readDHT11(DHT11 *device)
 {
-	uint8_t dhtPin = device->pin;
-	uint8_t dhtPort = device->port;
+	uint16_t dhtPin = device->pin;
+	GPIO_TypeDef dhtPort = device->port;
 
 	// Data frame: | MCU Start | DHT Response | H.int | H.dec | T.int | T.dec | checksum |
 
@@ -55,10 +55,11 @@ uint8_t readDHT11(DHT11 *device)
 	uint8_t checksum = 0;
 	for (uint8_t i = 0; i < 4; i++)
 	{
-		checksum ^= dhtData[i];
-		if (checksum != dhtData[4])
-			return 1;
+		checksum += dhtData[i];
 	}
+
+	if (checksum != dhtData[4])
+		return 1;
 
 	/* 5. Write data out */
 	device->humidity = dhtData[0];
